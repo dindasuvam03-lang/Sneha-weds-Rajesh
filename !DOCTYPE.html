@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Wedding Invitation</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel&family=Great+Vibes&family=Poppins&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:#f8f1e7;
+  color:#5a3e2b;
+  overflow:hidden;
+}
+
+/* CURTAIN */
+.curtain{
+  position:fixed;
+  width:50%;
+  height:100%;
+  background:linear-gradient(#8b0000,#2b0000);
+  z-index:10;
+  transition:1.5s;
+}
+.left{left:0;}
+.right{right:0;}
+.open .left{transform:translateX(-100%);}
+.open .right{transform:translateX(100%);}
+
+/* START */
+.start-screen{
+  position:absolute;
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#000;
+  z-index:20;
+}
+
+.heart-btn{
+  width:140px;
+  height:140px;
+  background:radial-gradient(circle,#ff0000,#b8860b);
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:white;
+  font-size:20px;
+  cursor:pointer;
+  animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.2);}
+  100%{transform:scale(1);}
+}
+
+/* PAGE */
+.page{
+  display:none;
+  padding:30px;
+  text-align:center;
+}
+.active{display:block;}
+
+h1{
+  font-family:'Cinzel',serif;
+  color:#a67c52;
+}
+.names{
+  font-family:'Great Vibes',cursive;
+  font-size:42px;
+}
+
+/* SCRATCH FIX */
+.scratch-container{
+  position:relative;
+  width:260px;
+  height:130px;
+  margin:20px auto;
+}
+
+.scratch-content{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:gold;
+  border-radius:10px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:10px;
+  box-sizing:border-box;
+}
+
+canvas{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+}
+
+/* BUTTON */
+.next-btn{
+  margin-top:20px;
+  padding:10px 20px;
+  border:none;
+  background:#a67c52;
+  color:white;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+/* COUNTDOWN */
+.countdown{
+  font-size:26px;
+}
+
+/* SWASTIK STYLE */
+.swastik{
+  font-size:50px;
+  color:#a67c52;
+  animation:spin 4s linear infinite;
+  margin:10px;
+}
+@keyframes spin{
+  to{transform:rotate(360deg);}
+}
+
+/* MAP */
+.map-img{
+  width:90%;
+  max-width:350px;
+  border-radius:10px;
+  margin:15px 0;
+}
+
+.map-btn{
+  background:#a67c52;
+  padding:10px 15px;
+  color:white;
+  text-decoration:none;
+  border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- CURTAIN -->
+<div class="curtain left"></div>
+<div class="curtain right"></div>
+
+<!-- START -->
+<div class="start-screen">
+  <div class="heart-btn" onclick="start()">OPEN</div>
+</div>
+
+<!-- PAGE 1 -->
+<div class="page" id="page1">
+  <h1>We Are Getting Married</h1>
+  <div class="names">Sneha ✨ Rajesh</div>
+
+  <p>
+  ✨Love in the air✨<br>
+  Join us for a magical celebration of love, happiness and togetherness 💖<br>
+  🎉Let's create beautiful memories together 💍🌸
+  </p>
+
+  <h3>Scratch to Reveal</h3>
+
+  <div class="scratch-container">
+    <div class="scratch-content">
+      You are invited 💍<br>
+      06th July 2026<br>
+      Monday | Evening
+    </div>
+    <canvas id="scratch"></canvas>
+  </div>
+
+  <button class="next-btn" onclick="nextPage(2)">Next</button>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page" id="page2">
+  <h1>Countdown</h1>
+
+  <div class="swastik">卐</div>
+
+  <div class="countdown" id="countdown"></div>
+
+  <button class="next-btn" onclick="nextPage(3)">Next</button>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page" id="page3">
+  <h1>Venue</h1>
+
+  <p>
+  Madan Manjari Kuthir<br>
+  BalakRouth, Daspur,<br>
+  Paschim Medinipur
+  </p>
+
+  <img src="map.png" class="map-img">
+
+  <br>
+
+  <a class="map-btn" href="https://maps.app.goo.gl/5Xe1rdwVCXh8S2su5" target="_blank">
+    View on Google Map
+  </a>
+</div>
+
+<script>
+// START
+function start(){
+  document.body.classList.add("open");
+  document.querySelector(".start-screen").style.display="none";
+  document.getElementById("page1").classList.add("active");
+  document.body.style.overflow="auto";
+}
+
+// PAGE SWITCH
+function nextPage(n){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page"+n).classList.add("active");
+}
+
+// COUNTDOWN
+let date=new Date("July 6, 2026 18:00:00").getTime();
+setInterval(()=>{
+ let now=new Date().getTime();
+ let gap=date-now;
+
+ let d=Math.floor(gap/(1000*60*60*24));
+ let h=Math.floor((gap%(1000*60*60*24))/(1000*60*60));
+ let m=Math.floor((gap%(1000*60*60))/(1000*60));
+ let s=Math.floor((gap%(1000*60))/1000);
+
+ document.getElementById("countdown").innerHTML=
+ d+"d "+h+"h "+m+"m "+s+"s";
+},1000);
+
+// SCRATCH FIXED
+let canvas=document.getElementById("scratch");
+let ctx=canvas.getContext("2d");
+
+canvas.width=260;
+canvas.height=130;
+
+ctx.fillStyle="gray";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+function scratch(x,y){
+ ctx.globalCompositeOperation="destination-out";
+ ctx.beginPath();
+ ctx.arc(x,y,15,0,Math.PI*2);
+ ctx.fill();
+}
+
+canvas.addEventListener("mousemove",e=>{
+ if(e.buttons===1) scratch(e.offsetX,e.offsetY);
+});
+
+canvas.addEventListener("touchmove",e=>{
+ let rect=canvas.getBoundingClientRect();
+ let x=e.touches[0].clientX-rect.left;
+ let y=e.touches[0].clientY-rect.top;
+ scratch(x,y);
+});
+</script>
+
+</body>
+</html>
